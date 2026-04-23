@@ -25,7 +25,7 @@ try {
     $nodeVer = (node --version 2>&1) -replace "^v",""
     $semVer  = [Version]($nodeVer -replace "^(\d+\.\d+\.\d+).*",'$1')
     if ($semVer.Major -lt 20) {
-        Write-Fail "Node.js $nodeVer found — need 20+. Download: https://nodejs.org"
+        Write-Fail "Node.js $nodeVer found - need 20+. Download: https://nodejs.org"
         exit 1
     }
     Write-Ok "Node.js $nodeVer"
@@ -82,15 +82,15 @@ if ($Model -eq "") {
     $Model = $env:OPENAI_MODEL
 }
 if ($Model -eq "" -or $null -eq $Model) {
-    Write-Warn "No model specified. Pass -Model 'deepseek-coder-v2:16b' or set OPENAI_MODEL in .env"
-    Write-Host "    Defaulting to: deepseek-coder-v2:16b"
-    $Model = "deepseek-coder-v2:16b"
+    Write-Warn "No model specified. Pass -Model 'qwen3-coder:latest' or set OPENAI_MODEL in .env"
+    Write-Host "    Defaulting to: qwen3-coder:latest"
+    $Model = "qwen3-coder:latest"
 }
 Write-Ok "Model: $Model"
 
 # ── Step 5: Install openclaude ─────────────────────────────────────────────────
 Write-Step "Installing openclaude..."
-npm install -g @gitlawb/openclaude
+npm install -g @gitlawb/openclaude@0.5.2 --legacy-peer-deps
 if ($LASTEXITCODE -ne 0) {
     Write-Fail "npm install failed."
     exit 1
@@ -111,13 +111,13 @@ if ($Persist) {
     Write-Step "Persisting config to PowerShell profile ($PROFILE)..."
     $lines = @(
         "",
-        "# openclaude — local Ollama backend",
+        "# openclaude - local Ollama backend",
         "`$env:CLAUDE_CODE_USE_OPENAI = '1'",
         "`$env:OPENAI_BASE_URL        = 'http://localhost:11434/v1'",
         "`$env:OPENAI_MODEL           = '$Model'"
     )
     $lines | Add-Content -Path $PROFILE -Encoding UTF8
-    Write-Ok "Added to $PROFILE — takes effect in new terminals"
+    Write-Ok "Added to $PROFILE - takes effect in new terminals"
 }
 
 # ── Done ───────────────────────────────────────────────────────────────────────
